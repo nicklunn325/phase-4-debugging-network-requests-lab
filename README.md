@@ -64,10 +64,37 @@ developing your own process.
 
   - How I debugged:
 
+    - first we tried to submit the form via frontend
+    - we received error `POST http://localhost:4000/toys 500 (Internal Server Error)`
+    - for internal server error, we first look at our server log and try and determine what went wrong
+    - we saw this in our terminal:
+
+    ```
+    NameError (uninitialized constant ToysController::Toys):
+
+    app/controllers/toys_controller.rb:10:in `create'
+    ```
+
+    - we went to line 10 in our toys_controller ands saw Toys.create instead of Toy.create
+
 - Update the number of likes for a toy
 
   - How I debugged:
 
+    - started by trying to click like button for toy
+    - dom did not update and console had error `SyntaxError: Unexpected end of JSON input at ToyCard.js:21`
+    - checked fetch request, looked good
+    - next check controller action to make sure it is rendering json
+    - it was not
+    - we made it return the updated toy as json
+
 - Donate a toy to Goodwill (and delete it from our database)
 
   - How I debugged:
+  - Click the "Donate to GoodWill" button and watch behaviour
+  - Looked at Network tab in dev tools response came back with Status Code: 404 Not Found
+  - the server gave me this error ActionController::RoutingError (No route matches [DELETE] "/toys/1"):
+  - From that last error I assume there is a missing rout for delete
+  - Update resource to look like this "resources :toys, only: [:index, :create, :update, :destroy]"
+  - Try "Donate to DoodWill" button again
+  - Issue Solved
